@@ -58,13 +58,15 @@ test('Should emit a warning when accessing reply.res instead of reply.raw', t =>
 })
 
 test('Should emit a warning when using two arguments Content Type Parser instead of three arguments', t => {
-  t.plan(7)
+  t.plan(4)
 
   process.on('warning', onWarning)
   function onWarning (warning) {
     t.equal(warning.name, 'FastifyDeprecation')
     t.equal(warning.code, 'FSTDEP003')
     t.equal(warning.message, 'You are using the legacy Content Type Parser function signature. Use the one suggested in the documentation instead.')
+    process.removeListener('warning', onWarning)
+    t.end()
   }
 
   const fastify = Fastify()
@@ -89,20 +91,21 @@ test('Should emit a warning when using two arguments Content Type Parser instead
       t.error(err)
       t.equal(response.statusCode, 200)
       t.equal(body.toString(), 'OK')
-      process.removeListener('warning', onWarning)
       fastify.close()
     })
   })
 })
 
 test('Should emit a warning when using payload less preParsing hook', t => {
-  t.plan(7)
+  t.plan(4)
 
   process.on('warning', onWarning)
   function onWarning (warning) {
     t.equal(warning.name, 'FastifyDeprecation')
     t.equal(warning.code, 'FSTDEP004')
     t.equal(warning.message, 'You are using the legacy preParsing hook signature. Use the one suggested in the documentation instead.')
+    process.removeListener('warning', onWarning)
+    t.end()
   }
 
   const fastify = Fastify()
@@ -125,7 +128,6 @@ test('Should emit a warning when using payload less preParsing hook', t => {
       t.error(err)
       t.equal(response.statusCode, 200)
       t.equal(body.toString(), 'OK')
-      process.removeListener('warning', onWarning)
       fastify.close()
     })
   })
